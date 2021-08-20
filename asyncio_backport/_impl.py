@@ -144,7 +144,7 @@ else:  # pragma: py-gte-37
 
 if sys.version_info >= (3, 8):  # pragma: py-lt-38
     from asyncio import create_task
-elif sys.version_info >= (3, 7):  # pragma: py-lt-37
+elif sys.version_info >= (3, 7):  # pragma: py-lt-37 pragma: py-gte-38
 
     def create_task(
         coro: Union[Generator[_TaskYieldType, None, _T], Awaitable[_T]],
