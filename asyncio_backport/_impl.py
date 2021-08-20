@@ -63,31 +63,13 @@ else:  # pragma: py-gte-37
             raise RuntimeError("no running event loop")
         return loop
 
-    def _get_loop(fut: "asyncio.Future[object]") -> asyncio.AbstractEventLoop:
-        return fut._loop
-
     def all_tasks(
         loop: Optional[asyncio.AbstractEventLoop] = None,
     ) -> "Set[asyncio.Task[object]]":
         """Return a set of all tasks for the loop."""
         if loop is None:
             loop = get_running_loop()
-        # Looping over a WeakSet (_all_tasks) isn't safe as it can be updated
-        # from another thread while we do so. Therefore we cast it to list
-        # prior to filtering. The list cast itself requires iteration, so we
-        # repeat it several times ignoring RuntimeErrors (which are not very
-        # likely to occur). See issues 34970 and 36607 for details.
-        i = 0
-        while True:
-            try:
-                tasks = list(asyncio.Task.all_tasks())
-            except RuntimeError:
-                i += 1
-                if i >= 1000:  # pragma: no cover
-                    raise
-            else:
-                break
-        return {t for t in tasks if _get_loop(t) is loop and not t.done()}
+        return asyncio.Task.all_tasks(loop)
 
     def run(main: Coroutine[Any, Any, _T], *, debug: bool = False) -> _T:
         """Execute the coroutine and return the result.

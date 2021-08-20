@@ -1,5 +1,4 @@
 import asyncio
-import concurrent.futures
 from typing import Dict, Type, Union
 
 import pytest
@@ -52,25 +51,6 @@ def test_run_cancel() -> None:
 def test_all_tasks_no_loop() -> None:
     with pytest.raises(RuntimeError, match=r"no running event loop"):
         asyncio_backport.all_tasks()
-
-
-def test_all_tasks_threading() -> None:
-    async def foo() -> None:
-        await asyncio.sleep(0)
-
-    async def create_tasks() -> None:
-        for i in range(1000):
-            asyncio_backport.create_task(foo())
-
-        await asyncio.sleep(0)
-
-    results = []
-    with concurrent.futures.ThreadPoolExecutor(100) as tpe:
-        for f in concurrent.futures.as_completed(
-            tpe.submit(asyncio_backport.run, create_tasks()) for i in range(100)
-        ):
-            results.append(f.result())
-    assert results == [None] * 100
 
 
 def test_run_nested() -> None:
