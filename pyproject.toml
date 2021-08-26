@@ -5,7 +5,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "asyncio-backport"
 authors = [{name = "Thomas Grainger", email = "asyncio-backport@graingert.co.uk"}]
-version = "0.1.0"
+version = "0.1.1"
 description = "A backport of asyncio features from newer versions"
 
 [project.urls]
