@@ -69,7 +69,7 @@ else:  # pragma: py-gte-37
         """Return a set of all tasks for the loop."""
         if loop is None:
             loop = get_running_loop()
-        return asyncio.Task.all_tasks(loop)
+        return {task for task in asyncio.Task.all_tasks(loop) if not task.done()}
 
     def run(main: Coroutine[Any, Any, _T], *, debug: bool = False) -> _T:
         """Execute the coroutine and return the result.

@@ -147,3 +147,19 @@ def test_get_current_task_loop_arg() -> None:
         return 10
 
     assert asyncio_backport.run(demo()) == 10
+
+
+def test_all_tasks_only_pending() -> None:
+    async def done_soon() -> None:
+        pass
+
+    async def demo() -> int:
+        current_task = asyncio_backport.current_task()
+        assert asyncio_backport.all_tasks() == {current_task}
+        task = asyncio_backport.create_task(done_soon())
+        assert asyncio_backport.all_tasks() == {current_task, task}
+        await task
+        assert asyncio_backport.all_tasks() == {current_task}
+        return 12
+
+    assert asyncio_backport.run(demo()) == 12
