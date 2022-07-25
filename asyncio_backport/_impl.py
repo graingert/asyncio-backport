@@ -156,7 +156,6 @@ elif sys.version_info >= (3, 7):  # pragma: py-lt-37 pragma: py-gte-38
         """
         return asyncio.create_task(coro)
 
-
 else:  # pragma: py-gte-37
 
     def create_task(
